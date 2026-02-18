@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
 enum Priority { Low, Medium, High };
@@ -153,13 +153,13 @@ void clearConsole() {
 
 void displayMenu() {
     cout << "\n=== Customer Service and Task Scheduling System ===\n";
-    cout << "1. Add Customer\n";
-    cout << "2. Add Service Agent\n";
-    cout << "3. Create Service Request\n";
+    cout << "1. Add Customer\t        ";
+    cout << "2. Add Service Agent\t   ";
+    cout << "3. Create Service Request\t   ";
     cout << "4. Schedule Tasks\n";
-    cout << "5. Update Task Status\n";
-    cout << "6. Display All Tasks\n";
-    cout << "7. Display Pending Tasks\n";
+    cout << "5. Update Task Status\t";
+    cout << "6. Display All Tasks\t   ";
+    cout << "7. Display Pending Tasks\t   ";
     cout << "8. Display Completed Tasks\n";
     cout << "9. Exit\n";
     cout << "Enter your choice: ";
@@ -275,8 +275,10 @@ void updateTaskStatus(vector<Task>& tasks, vector<ServiceAgent>& agents) {
     cout << "Task status updated!\n";
 }
 
-void displayTasks(const vector<Task>& tasks, Status filter = Pending) {
-    bool showAll = (filter == Pending); 
+void displayTasks(const vector<Task>& tasks, Status filter = InProgress) {
+    bool showAll = (filter == InProgress); 
+    bool found = false;
+
     const int widthId = 8;
     const int widthDesc = 32;
     const int widthPri = 10;
@@ -288,6 +290,7 @@ void displayTasks(const vector<Task>& tasks, Status filter = Pending) {
     cout << string(totalWidth, '-') << endl;
     for (const auto& task : tasks) {
         if (showAll || task.getStatus() == filter) {
+            found = true;
             string agent = (task.getAssignedAgentId() == -1 ? "None" : to_string(task.getAssignedAgentId()));
             string desc = task.getDescription();
             if (static_cast<int>(desc.length()) > widthDesc - 2) desc = desc.substr(0, widthDesc - 5) + "...";
@@ -296,9 +299,13 @@ void displayTasks(const vector<Task>& tasks, Status filter = Pending) {
                  << setw(widthPri) << priorityToString(task.getPriority())
                  << setw(widthStatus) << statusToString(task.getStatus())
                  << setw(widthAgent) << agent << endl;
+            cout << string(totalWidth, '-') << endl;
         }
     }
-    cout << string(totalWidth, '-') << endl;
+    if(!found){
+        cout << "No such task available!"<< endl;
+        cout << string(totalWidth, '-') << endl;
+    }
 }
 
 int main() {
@@ -331,7 +338,7 @@ int main() {
                 break;
             case 6:
                 cout << "\nAll Tasks:\n";
-                displayTasks(tasks, Pending); 
+                displayTasks(tasks); 
                 break;
             case 7:
                 cout << "\nPending Tasks:\n";
